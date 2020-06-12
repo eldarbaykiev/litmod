@@ -1,5 +1,5 @@
 CC=
-CFLAGS=-Ofast -fno-automatic -fd-lines-as-code -ffixed-line-length-none
+CFLAGS=-Ofast -fno-automatic -fd-lines-as-code -ffixed-line-length-none -std=legacy
 CFLAGS_INTF=
 
 UNAME := $(shell uname)
@@ -7,13 +7,13 @@ UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
 	CC=gfortran
 #	CFLAGS +=
-  CFLAGS_INTF += -lpgplot -L/usr/lib -lX11 -fd-lines-as-comments -lpng
+  CFLAGS_INTF += -lpgplot -L/usr/lib -lX11 -fd-lines-as-comments -lpng 
 
 endif
 ifeq ($(UNAME), Darwin)
 	CC=gfortran
 #	CFLAGS +=
-  CFLAGS_INTF += -lpgplot -L/opt/X11/lib -I/opt/X11/include -lX11 -fd-lines-as-comments -lpng
+  CFLAGS_INTF += -lpgplot -L/opt/X11/lib -I/opt/X11/include -lX11 -L/usr/local/opt/pgplot/lib -I/usr/local/opt/pgplot/include  -fd-lines-as-comments -lpng 
 endif
 
 all: litmod litmod_intf
