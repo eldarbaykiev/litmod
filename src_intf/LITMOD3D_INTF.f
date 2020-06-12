@@ -254,7 +254,7 @@ D     STAT=SETWSIZEQQ(0, qinfo)
       CLOSE(200)
       N_ydmm=i_con/N_xdmm
       if(MAC.eq.1) then
-        CALL SYSTEM('minmax -C ./layers/layer1.xyz>qq')
+        CALL SYSTEM('gmt4 minmax -C ./layers/layer1.xyz>qq')
       else
         CALL SYSTEM('minmax -C ./layers/layer1.xyz>qq')
       end if

@@ -397,7 +397,8 @@
               T_dm=1823D0
             endif
          IF(P_dm>145100D0) THEN
-          WRITE(*,*)'p IN THE PHASES FILE OUT OF RANGE!!'
+	  !RETURN IT BACK ELDAR BAYKIEV
+          !WRITE(*,*)'p IN THE PHASES FILE OUT OF RANGE!!'
           P_dm=145000D0
          ENDIF
          i=NINT((T_dm-T_LK_0(k)-273.15D0)/d_T_LK(k)+1)
