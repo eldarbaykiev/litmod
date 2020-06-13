@@ -5,13 +5,13 @@
 !!!=============================================================================
 !!!*****************************************************************************
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   LitMod   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Version: iTherC   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     Version: 4.0    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!=============================================================================
 
 
-!!! To compile:
-!!! gfortran main.for modules* sub* -o litmod
+!!! To compile (on macOS Catalina 10.15.5, Xcode 11.5):
+!!! gfortran -o litmod  modules.for LITMOD3D.for SUB* -Ofast -fno-automatic -fd-lines-as-code -ffixed-line-length-none -std=legacy
 
 
       program litmod
@@ -36,9 +36,6 @@
       use M_d
 
       REAL(8),ALLOCATABLE::dmmy_vec(:)
-!end MINEOS
-
-
 
       !!! Coefficients for pure water EoS from Pitzer and Sterner, 1994.
       c_T(:,:)=0
@@ -159,9 +156,10 @@
         ENDDO
        ENDIF
       ENDIF
-!Resoluci�n sistema de ecuaciones
+!Solving the equation system
       ITMAX=150000
       ERROR=1.D-7
+
 !Input parameters
       OPEN(15,FILE='LITMOD3D.info',STATUS='OLD',IOSTAT=II)
       IF(II==0) THEN
@@ -183,10 +181,7 @@
         rho_m_MOR=3424.5D0
        ENDIF
        CLOSE(15)
-	write(*,*) L_x,L_y,E_max,N_x,N_y,N_z,d_z,topo,temp_calc,Ts,Ta,
-     *           rho_red,dm,E_cali,ol_mod,gt_mod,opx_mod,mlt_mod,
-     *           melt_mix,Z_Usec,volexp,d_size
-	write(*,*) rho_m_MOR
+
 
 !	stop
       ELSE
@@ -217,26 +212,7 @@
       ENDIF
 
 !Total number of effective nodes
-
-
       NOD_TOT=(N_x-2)*(N_y-2)*(N_z-2)
-
-
-!FIX LATER!!!!!!
-c      OPEN(891,file='lonlat.xy',status='UNKNOWN')
-
-c      read(891, *) d_coordnum
-c      do d_coordind = 1,d_coordnum
-c        read(891, *) d_coordx,d_coordy,
-c     *     name_ray,name_love,I_anis,name_anis
-
-c        write(*,*) d_coordx,d_coordy,
-c     *     name_ray,name_love,I_anis,name_anis
-c      enddo
-
-
-      close(891)
-!FIX LATER!!!!!!
 
       write(*,*)''
       write(*,*)'##################### LitMod3D ####################'

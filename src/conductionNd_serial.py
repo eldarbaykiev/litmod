@@ -100,7 +100,16 @@ class ConductionND(object):
 
         index = np.empty(n + 2, dtype=np.int32)
         index.fill(-1)
-        index[self.interior_slice] = self.nodes.reshape(n)
+        #print("first case")
+        #print(self.interior_slice)
+        #print(tuple(self.interior_slice))
+        
+        #import time
+        #time.sleep(30)
+        
+        #index[self.interior_slice] = self.nodes.reshape(n)
+        #modified by Eldar Baykiev due to transition into Python 3
+        index[tuple(self.interior_slice)] = self.nodes.reshape(n)
         self.index = index
 
         self.rows = np.empty((self.stencil_width, nn), dtype=np.int32)
@@ -251,19 +260,22 @@ class ConductionND(object):
         u = self.diffusivity.reshape(n)
 
         k = np.zeros(n + 2)
-        k[self.interior_slice] = u
+        #modified by Eldar Baykiev due to transition into Python 3
+        k[tuple(self.interior_slice)] = u
 
         for i in range(0, self.stencil_width):
             obj = self.closure[i]
 
             rows[i] = nodes
-            cols[i] = index[obj].ravel()
+            #modified by Eldar Baykiev due to transition into Python 3
+            cols[i] = index[tuple(obj)].ravel()
 
             distance = np.linalg.norm(self.coords[cols[i]] - self.coords, axis=1)
             distance[distance==0] = 1e-12 # protect against dividing by zero
             delta = 1.0/(2.0*distance**2)
 
-            vals[i] = delta*(k[obj] + u).ravel()
+            #modified by Eldar Baykiev due to transition into Python 3
+            vals[i] = delta*(k[tuple(obj)] + u).ravel()
 
 
         # Dirichlet boundary conditions (duplicates are summed)

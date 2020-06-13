@@ -1,3 +1,8 @@
+
+#LITMOD 4.0
+#Script for parallel computation of the gravity field
+#Eldar Baykiev, 2018-2020
+
 import numpy as np
 import time
 import multiprocessing
@@ -17,18 +22,18 @@ tsplit = time.time()
 filename_grav_input = "grav_input.dat"
 
 n_elem = int(subprocess.check_output("sed -n '$=' " + filename_grav_input, shell=True))
-print("n_elem:"+str(n_elem))
+#print("Number of sources: "+str(n_elem))
 
 
 n_proc = int(multiprocessing.cpu_count())
-print("n_proc:"+str(n_proc))
+print("Number of processors: "+str(n_proc))
 
 n_lines = int(n_elem/n_proc)
 
 if (float(n_elem)/float(n_proc)>0):
     n_lines = n_lines + (n_elem%n_proc)
 
-print("n_lines:"+str(n_lines))
+#print("n_lines:"+str(n_lines))
 
 
 
@@ -48,7 +53,7 @@ for filename in chunks:
     os.rename(filename, filename + '.dat')
 
 filenames = glob.glob('gchunk*')
-print(filenames)
+#print(filenames)
 tsplit = time.time()-tsplit
 
 
@@ -58,12 +63,15 @@ for i in range(0,n_proc):
     command_for_shell = command_for_shell + './gravcalc_parallel ' + filenames[i] + ' | '
 
 command_for_shell = command_for_shell[0:len(command_for_shell)-2] + '\n'
-print(command_for_shell)
-
+#print(command_for_shell)
+print('Parallel computation... ', end='')
+tcalc = time.time()
 os.system(command_for_shell)
+print('done')
+print("Time spent on computations: {:.2f} sec".format(time.time()-tcalc))
 
 
-print('Summation of the output grids...')
+print('Summation of the output grids...', end='')
 tsum = time.time()
 GEOID = np.loadtxt(chunks[0] + '_GEOID.dat')
 FA    = np.loadtxt(chunks[0] + '_FA.dat')
@@ -135,7 +143,9 @@ np.savetxt('grav_input_Uxy_cr.dat', Uxy_cr)
 for filename in glob.glob('gchunk*'):
     os.remove(filename)
 
-
-print("Time spent of operations with files: {:.2f} sec".format(((time.time()-tsum)+tsplit)/1.0))
+print('done')
+print("Time spent on operations with files: {:.2f} sec".format(time.time()-tsum))
 
 print("Total execution time: {:.1f} min".format((time.time()-systime)/60.0))
+
+print('\n')
