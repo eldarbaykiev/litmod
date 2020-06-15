@@ -5,13 +5,13 @@ alias gmt4=/opt/local/bin/gmt4
 #Every time the region coordinates or the number of nodes are changed
 #LITMOD3D.job must be run setting pre_pro=1
 #Region coordinates
-lon_min=100
-lon_max=110
-lat_min=45
-lat_max=55
+lon_min=-13
+lon_max=4
+lat_min=49
+lat_max=60
 #Number of nodes in x,y,z
-N_x=51
-N_y=51
+N_x=100
+N_y=65
 N_z=204
 #Vertical-grid step (km)
 d_z=2
@@ -36,8 +36,7 @@ pre_pro=0
 #(for synthetic models)
 #syn=0--> Pre process generate the observed geophysical data
 syn=0
-#classic=0-->Run LitMod3D 3.0
-#classic=1-->Run LitMod3D 2.8 STATOIL version
+#classic=0-->Run LitMod3D 4.0
 classic=0
 #topo=1-->Non filtered elevation
 #topo=2-->Filtered elevation
@@ -114,6 +113,7 @@ d_size=10
 #format: LON [deg] | LAT [deg] | Rayleigh_column_filename | Love_column_filename | Anisotropy [1 or 0] | Anisotropy_filename
 mineos_lonlat='105 50 BaikalRayl_rsmp BaikalLove_rsmp 1 anis.dat'
 
+
 #+++++++++++MANTLE FILE INFO+++++++++++++++++++++++++++++++++++
 #Format: litho_number name_of_associated file \n
 #litho=99 is reserved for the sublithospheric mantle
@@ -184,7 +184,7 @@ awk '{print $0}' dmmy | read call_litmod3d_intf
 if [ $call_litmod3d_intf -eq 1 ]
 then
 echo "Generating info.dat"
-echo "Call from LITMOD3D_INTF"
+echo "Call from litmod_intf"
 echo $lon_min $lon_max $lat_min $lat_max $N_x $N_y $syn $path_elev $dir_data >info.dat
 echo 0 >dmmy
 exit
@@ -517,27 +517,37 @@ echo  $L_x $L_y $E_max $N_x $N_y $N_z $d_z $topo $temp_calc $Ts $Ta $rho_red $pl
 
 ##############MINEOS##########################
 echo $mineos_lonlat>mineos_lonlat.dat
+N_LIN=$(wc -c mineos_lonlat.dat | awk '{print $1}')
 
-cd layers
-gmt4 surface layer1.xyz -Gqqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
-gmt4 grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqqqc.grd
-#Read dimension of the cartesian grid
-gmt4 grdinfo qqqc.grd | grep x_max: | awk '{print $5 }' |
-read L_x
-gmt4 grdinfo qqqc.grd | grep y_max: | awk '{print $5 }' |
-read L_y
-rm qqq.grd
-rm qqqc.grd
-cd ../
+if [ "$N_LIN" -eq 1 ]
+then
+    echo "No column for MINEOS"
+    echo "0">mineos_lonlat.xy
+else
+    cd layers
+    gmt4 surface layer1.xyz -Gqqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
+    gmt4 grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqqqc.grd
+    #Read dimension of the cartesian grid
+    gmt4 grdinfo qqqc.grd | grep x_max: | awk '{print $5 }' |
+    read L_x
+    gmt4 grdinfo qqqc.grd | grep y_max: | awk '{print $5 }' |
+    read L_y
+    rm qqq.grd
+    rm qqqc.grd
+    cd ../
 
-awk '{print $1,$2}' mineos_lonlat.dat > lonlat.ll
-gmt4 mapproject lonlat.ll -R$lon_min/$lon_max/$lat_min/$lat_max -J${proj} -Fk > ll.xy
-awk '{print $3,$4,$5,$6}' mineos_lonlat.dat > lonlat.other
-paste ll.xy lonlat.other > ll1.xy
-wc -l < ll1.xy > mineos_lonlat.xy
-#wc -l mineos_lonlat.dat > mineos_lonlat.xy
-awk '{print $1*1e+3,("'$L_y'"-$2)*1e+3,$3,$4,$5,$6}' ll1.xy >> mineos_lonlat.xy
-rm ll.xy lonlat.other ll1.xy lonlat.ll 
+    awk '{print $1,$2}' mineos_lonlat.dat > lonlat.ll
+    gmt4 mapproject lonlat.ll -R$lon_min/$lon_max/$lat_min/$lat_max -J${proj} -Fk > ll.xy
+    awk '{print $3,$4,$5,$6}' mineos_lonlat.dat > lonlat.other
+    paste ll.xy lonlat.other > ll1.xy
+    wc -l < ll1.xy > mineos_lonlat.xy
+    #wc -l mineos_lonlat.dat > mineos_lonlat.xy
+    awk '{print $1*1e+3,("'$L_y'"-$2)*1e+3,$3,$4,$5,$6}' ll1.xy >> mineos_lonlat.xy
+    rm ll.xy lonlat.other ll1.xy lonlat.ll
+fi
+
+
+
 ##############################################
 
 

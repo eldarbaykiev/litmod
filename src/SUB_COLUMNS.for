@@ -1558,7 +1558,7 @@
       STAT=STAT.and.STAT1
 
       if (STAT) then
-       write(*,*)'readING OBSERVED GEOPHYSICAL DATA'
+       write(*,*)'READING OBSERVED GEOPHYSICAL DATA'
        write(*,*)'(GEOID, FA and BOUGUER ANOMALIES)'
        open(21,file='GEO_DATA/geoid_dat_c.xyz',status='OLD')
        open(22,file='GEO_DATA/FA_dat_c.xyz',status='OLD')
