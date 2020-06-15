@@ -30,6 +30,7 @@ litmod:
 
 litmod_intf:
 	$(CC) -o litmod_intf src_intf/LITMOD3D_INTF.f src_intf/SUB* $(CFLAGS_INTF)
+	cp src_intf/minmax.py minmax.py
 
 clean:
-	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py gravity_calculator.py litmod_intf
+	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py gravity_calculator.py litmod_intf minmax.py

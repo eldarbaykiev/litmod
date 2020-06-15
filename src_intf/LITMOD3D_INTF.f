@@ -253,12 +253,9 @@ D     STAT=SETWSIZEQQ(0, qinfo)
       ENDDO
       CLOSE(200)
       N_ydmm=i_con/N_xdmm
-      if(MAC.eq.1) then
-        !current way to call MacPorts gmt4 from macOS
-        CALL SYSTEM('gmt4 minmax -C ./layers/layer1.xyz>qq')
-      else
-        CALL SYSTEM('minmax -C ./layers/layer1.xyz>qq')
-      end if
+
+      !current way to call minmax (gmt independent)
+      CALL SYSTEM('python3 minmax.py ./layers/layer1.xyz>qq')
 
       OPEN(1,file='qq',status='OLD')
       READ(1,*)lon_min_dm,lon_max_dm,lat_min_dm,lat_max_dm
@@ -323,7 +320,7 @@ D     STAT=SETWSIZEQQ(0, qinfo)
 
       IF(KEY .EQ. 'Y') THEN
         STAT1=.TRUE.
-         IF(LINUX) THEN
+         IF((LINUX).OR.(MAC.eq.1)) THEN
 !Call to the script which generates the coast line and resamples
 !the  elevation and layer files
             CALL SYSTEM ('./elev.job')
@@ -332,13 +329,13 @@ D     STAT=SETWSIZEQQ(0, qinfo)
          ENDIF
       ENDIF
 
-      write(*,*)"Line 317"
+      !write(*,*)"Line 317"
 !Abre el device for graphic
 !Abrir dos devices: fichero postscript y una xwin. Para pasar de uno
 !a otro a de usarse el comando PGSLCT(device)
 !      IPS=PGOPEN('interfaz.ps/vcps')
 !      ISTAT=PGOPEN('?')
-      IF(LINUX) THEN
+      IF((LINUX).OR.(MAC.eq.1)) THEN
          ISTAT=PGOPEN('/XWINDOW')
       ELSE
          ISTAT=PGOPEN('/WX')
