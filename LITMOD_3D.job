@@ -111,26 +111,39 @@ d_size=10
 
 #list of columns for Mineos
 #format: LON [deg] | LAT [deg] | Rayleigh_column_filename | Love_column_filename | Anisotropy [1 or 0] | Anisotropy_filename
-mineos_lonlat='105 50 BaikalRayl_rsmp BaikalLove_rsmp 1 anis.dat'
-
+#mineos_lonlat='105 50 BaikalRayl_rsmp BaikalLove_rsmp 1 anis.dat'
+mineos_lonlat=''
 
 #+++++++++++MANTLE FILE INFO+++++++++++++++++++++++++++++++++++
 #Format: litho_number name_of_associated file \n
 #litho=99 is reserved for the sublithospheric mantle
-mnt_info='22 Mongolia_av_HP98JCA \n
-           21 Inver_Lherz_HP98JCA  \n
-           41 Inver_Harz_HP98JCA \n
-           26 Av_Tecton_peridotite_HP98JCA \n
-           27 Av_Tecton_gnt_perid_HP98JCA \n
-           24 Derbyshire_xeno_HP98JCA \n
-           25 Fidra_xeno_HP98JCA \n
-           28 Fidra_FeO_xeno_HP98JCA \n
-           43 Kaap_Harzburg_HP98JCA \n
-           99 sublitho_HP98JCA \n
-           77 bulk_TMMFequ \n
-           78 RG_lower_crust \n
-           79 RG_upper_crust'
+#mnt_info='22 Mongolia_av_HP98JCA \n
+#           21 Inver_Lherz_HP98JCA  \n
+#           41 Inver_Harz_HP98JCA \n
+#           26 Av_Tecton_peridotite_HP98JCA \n
+#           27 Av_Tecton_gnt_perid_HP98JCA \n
+#           24 Derbyshire_xeno_HP98JCA \n
+#           25 Fidra_xeno_HP98JCA \n
+#           28 Fidra_FeO_xeno_HP98JCA \n
+#           43 Kaap_Harzburg_HP98JCA \n
+#           99 sublitho_HP98JCA \n
+#           77 bulk_TMMFequ \n
+#           78 RG_lower_crust \n
+#           79 RG_upper_crust'
 
+mnt_info='14 bulk_sh \n
+            15 bulk_tm \n
+            22 Mongolia_av_HP98JCA \n
+            21 Inver_Lherz_HP98JCA  \n
+            41 Inver_Harz_HP98JCA \n
+            26 Av_Tecton_peridotite_HP98JCA \n
+            27 Av_Tecton_gnt_perid_HP98JCA \n
+            24 Derbyshire_xeno_HP98JCA \n
+            25 Fidra_xeno_HP98JCA \n
+            28 Fidra_FeO_xeno_HP98JCA \n
+            43 Kaap_Harzburg_HP98JCA \n
+            99 sublitho_HP98JCA \n
+            88 Ocean_floor_perid_HP98JCA'
 
 #+++++++++++MANTLE FILE INFO+++++++++++++++++++++++++++++++++++
 
