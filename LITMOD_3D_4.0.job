@@ -1,17 +1,17 @@
 #!/bin/zsh
-alias gmt4=/opt/local/bin/gmt4
-
+#alias gmt4=/opt/local/bin/gmt4
+alias gmt4=gmt
 # Script LITMOD_3D_MINEOS.job for LitMod3D 4.0 with dispersion curves
 #Every time the region coordinates or the number of nodes are changed
 #LITMOD3D.job must be run setting pre_pro=1
 #Region coordinates
-lon_min=-13
-lon_max=4
-lat_min=49
-lat_max=60
+lon_min=-12
+lon_max=-5
+lat_min=51
+lat_max=56
 #Number of nodes in x,y,z
-N_x=100
-N_y=65
+N_x=51
+N_y=51
 N_z=204
 #Vertical-grid step (km)
 d_z=2
