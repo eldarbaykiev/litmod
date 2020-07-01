@@ -344,7 +344,7 @@
        CLOSE(80)
        CLOSE(82)
        WRITE(*,*)'min/max T', MINVAL(T), MAXVAL(T)
-       T = T+12D0
+       !T = T+12D0 Why it is here??
 
       ELSE
        WRITE(*,*)'THERMAL CALCULATION OFF'

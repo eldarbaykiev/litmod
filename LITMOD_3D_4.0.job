@@ -1,6 +1,6 @@
 #!/bin/zsh
-#alias gmt4=/opt/local/bin/gmt4
-alias gmt4=gmt
+alias gmt4=/opt/local/bin/gmt4
+#alias gmt4=gmt
 # Script LITMOD_3D_MINEOS.job for LitMod3D 4.0 with dispersion curves
 #Every time the region coordinates or the number of nodes are changed
 #LITMOD3D.job must be run setting pre_pro=1
