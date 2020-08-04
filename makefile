@@ -16,7 +16,7 @@ ifeq ($(UNAME), Darwin)
   CFLAGS_INTF += -lpgplot -L/opt/X11/lib -I/opt/X11/include -lX11 -L/usr/local/opt/pgplot/lib -I/usr/local/opt/pgplot/include  -fd-lines-as-comments -lpng 
 endif
 
-all: litmod litmod_intf
+all: litmod litmod_intf litmod2
 
 interface: litmod_intf
 
@@ -27,10 +27,13 @@ litmod:
 
 	$(CC) -o gravcalc_parallel src/modules.for src/gravcalc_parallel.for src/SUB_Geo_Grad3D.for src/SUB_GeoGrav_Grad3D.for src/SUB_Grav_Grad3D.for src/SUB_SumTan.for src/SUB_U_SECOND_DER.for
 	cp src/gravity_calculator.py gravity_calculator.py
+	
+litmod2:
+	$(CC) -o litmod2 LITMOD3D_FOR_STATOIL_last/LITMOD3D.for LITMOD3D_FOR_STATOIL_last/SUB* $(CFLAGS)
 
 litmod_intf:
 	$(CC) -o litmod_intf src_intf/LITMOD3D_INTF.f src_intf/SUB* $(CFLAGS_INTF)
 	cp src_intf/minmax.py minmax.py
 
 clean:
-	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py gravity_calculator.py litmod_intf minmax.py
+	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py gravity_calculator.py litmod_intf minmax.py litmod2

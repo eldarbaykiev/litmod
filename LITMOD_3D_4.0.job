@@ -1,6 +1,6 @@
-#!/bin/zsh
-alias gmt4=/opt/local/bin/gmt4
-#alias gmt4=gmt
+#!/bin/zsh 
+#alias gmt4=/opt/local/bin/gmt4
+alias gmt4=gmt
 # Script LITMOD_3D_MINEOS.job for LitMod3D 4.0 with dispersion curves
 #Every time the region coordinates or the number of nodes are changed
 #LITMOD3D.job must be run setting pre_pro=1
@@ -230,8 +230,9 @@ awk '{lat_av=(($4+$3)/2);
       lon_av=(($2+$1)/2);
       print lat_av,lon_av;
 }' | read lat_av lon_av
-#proj='m'$lon_av'/'$lat_av'/16'
-proj='u'29U/16
+proj='m'$lon_av'/'$lat_av'/16'
+echo $proj
+proj='u'29N/16
 
 #Projection for the Heat Flow plot
 p=M12
@@ -255,7 +256,7 @@ fi
 gmt4 surface $path_geoid/geoid.xyz -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 gmt4 grd2xyz qq.grd>$dir_data/geoid_dat.xyz
 
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 
 gmt4 grdinfo qq.grd | grep x_max: | awk '{print $5 }' |
 read L_x
@@ -276,7 +277,7 @@ fi
 gmt4 surface $path_FA/FA.xyz -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 gmt4 grd2xyz qq.grd>$dir_data/FA_dat.xyz
 
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
@@ -293,7 +294,7 @@ fi
 #**************BOUGUER*********************************
 gmt4 surface $path_Boug/Boug.xyz -G$dir_data/Boug_dat.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 gmt4 grd2xyz $dir_data/Boug_dat.grd >$dir_data/Boug_dat.xyz
-gmt4 grdproject $dir_data/Boug_dat.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject $dir_data/Boug_dat.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk   -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd > $dir_data/Boug_dat_c.xyz
@@ -376,7 +377,7 @@ awk '{print $1, $2, $3}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uzz_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 #Read dimension of the cartesian grid
    gmt4 grdinfo qq.grd | grep x_max: | awk '{print $5 }' |
    read L_x
@@ -390,7 +391,7 @@ awk '{print $1, $2, $4}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uxx_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd | awk '{print $3}' > qq
@@ -401,7 +402,7 @@ awk '{print $1, $2, $5}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uyy_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd | awk '{print $3}' > qq
@@ -412,7 +413,7 @@ awk '{print $1, $2, $6}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uzx_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd | awk '{print $3}' > qq
@@ -423,7 +424,7 @@ awk '{print $1, $2, $7}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uzy_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd | awk '{print $3}' > qq
@@ -434,7 +435,7 @@ awk '{print $1, $2, $8}' gravity_grad_MRF.xyz | gmt4 xyz2grd -Gqq.grd -R$lon_min
 gmt4 grdsample qq.grd -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
 cp qq.grd $dir_data/Uxy_dat.grd
 #Project onto a plane
-gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd -V -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface -Gqq.grd -R0/$L_x/0/$L_y  -I"$N_x"+/"$N_y"+ -T1
 gmt4 grd2xyz qq.grd | awk '{print $3}' > qq
@@ -470,7 +471,7 @@ cd ../layers
 for i in *.xyz
    do
    gmt4 surface $i -Gqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
-   gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqqc.grd
+   gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk   -Gqqc.grd
 #Read dimension of the cartesian grid
    gmt4 grdinfo qqc.grd | grep x_max: | awk '{print $5 }' |
    read L_x
@@ -486,7 +487,7 @@ cd ../
 if [ $topo -eq 1 ]
 then
 gmt4 surface $dir_data/elev_dat.xyz -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
-gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqq.grd
+gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk  -Gqq.grd
 gmt4 grd2xyz qq.grd |
 gmt4 surface  -G./layers_xy/elev_c.grd -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+ -T1
 
@@ -506,7 +507,7 @@ fi
 
 else
 gmt4 surface $dir_data/elev_dat_fil.xyz -Gqq.grd -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
-gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -G./layers_xy/elev_fil_c.grd
+gmt4 grdproject qq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -G./layers_xy/elev_fil_c.grd
 gmt4 grd2xyz ./layers_xy/elev_fil_c.grd >./layers_xy/elev_fil_c.xyz
 fi
 rm qq.grd
@@ -539,7 +540,7 @@ then
 else
     cd layers
     gmt4 surface layer1.xyz -Gqqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
-    gmt4 grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Ak -N$N_x/$N_y -Gqqqc.grd
+    gmt4 grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Gqqqc.grd
     #Read dimension of the cartesian grid
     gmt4 grdinfo qqqc.grd | grep x_max: | awk '{print $5 }' |
     read L_x
@@ -593,13 +594,13 @@ fi
 echo $L_x $L_y |awk '{print $1*1e3,$2*1e3}'|read L_x_m L_y_m
 echo $L_x $L_y $L_x_m $L_y_m
 
-echo $L_x $N_x |
-awk '{printf ("%20.5f\n",$1/($2-1))}' |
-read d_x
+#echo $L_x $N_x |
+#awk '{printf ("%20.5f\n",$1/($2-1))}' |
+#read d_x
 
-echo $L_y $N_y |
-awk '{printf ("%20.5f\n",$1/($2-1))}' |
-read d_y
+#echo $L_y $N_y |
+#awk '{printf ("%20.5f\n",$1/($2-1))}' |
+#read d_y
 
 #Geoid
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/geoid_calc_c.xyz |
@@ -607,7 +608,7 @@ gmt4 surface -Ggeoid_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/geoid_calc_c_1D.xyz |
 gmt4 surface -Ggeoid_calc_c_1D.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #Transform the gridded data set from a rectangular coordinate system onto a geographical system
-gmt4 grdproject geoid_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -Ggeoid_calc.grd -V
+gmt4 grdproject geoid_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Ggeoid_calc.grd -V
 #gmt4 grdproject geoid_calc_c_1D.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -Ggeoid_calc.grd -V
 #Filter
 #gmt4 grdfilter  geoid_calc.grd -Ggeoid_calc.grd -V -D4 -Fg300
@@ -622,7 +623,7 @@ fi
 ##grd2cpt geoid.grd -Chaxby -S$ge_min/$ge_max/$ge_int  >geoid.cpt
 gmt4 makecpt -Chaxby -T$ge_min/$ge_max/$ge_int  >geoid.cpt
 gmt4 psbasemap -B2f1/2f1:."":/NsWe -J$proy -R$lon_min/$lon_max/$lat_min/$lat_max -K -Y11  >delta.ps
-gmt4 psscale -Cgeoid.cpt -D8/4/8.5/0.9  -K -O -B::/:"Geoid(m)": >>delta.ps
+gmt4 psscale -Cgeoid.cpt -D8/4/8.5/0.9  -K -O -B$ge_int::/:"Geoid(m)": >>delta.ps
 gmt4 grdimage geoid.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$proy -Cgeoid.cpt -K -O -E150  >>delta.ps
 
 if [ $syn -eq 0 ]
@@ -634,7 +635,7 @@ fi
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/FA_calc_c.xyz |
 gmt4 surface  -GFA_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject FA_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GFA_calc.grd
+gmt4 grdproject FA_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk   -GFA_calc.grd
 gmt4 grd2xyz FA_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GFA_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz FA_calc.grd >$dir_data/FA_calc.xyz
 cp FA_calc.grd FA.grd
@@ -646,7 +647,7 @@ fi
 ##grd2cpt FA.grd -Chaxby -S$FA_min/$FA_max/$FA_int  >FA.cpt
 gmt4 makecpt -Chaxby -T$FA_min/$FA_max/$FA_int  >FA.cpt
 gmt4 psbasemap -B2f1/2f1:."":NswE -J$proy -R$lon_min/$lon_max/$lat_min/$lat_max -K -O -X11  >>delta.ps
-gmt4 psscale -CFA.cpt -D8.5/4/8.5/0.9 -K -O -B::/:"FA(mGal)": >>delta.ps
+gmt4 psscale -CFA.cpt -D8.5/4/8.5/0.9 -K -O -B$FA_int::/:"FA(mGal)": >>delta.ps
 gmt4 grdimage FA.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proy -CFA.cpt -O -K -E150  >>delta.ps
 
 if [ $syn -eq 0 ]
@@ -659,7 +660,7 @@ awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/Boug_calc_c.xyz |
 gmt4 surface -GBoug_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #gmt4 xyz2grd -GBoug_calc_c.grd -R0/$L_x/0/$L_y -I$d_x/$d_y
 #desproyectar
-gmt4 grdproject Boug_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GBoug_calc.grd
+gmt4 grdproject Boug_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -GBoug_calc.grd
 gmt4 grd2xyz Boug_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GBoug_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Boug_calc.grd >$dir_data/Boug_calc.xyz
 cp Boug_calc.grd Boug.grd
@@ -673,7 +674,7 @@ fi
 ##grd2cpt Boug.grd -Chaxby -S$Bg_min/$Bg_max/$Bg_int  >Boug.cpt
 gmt4 makecpt -Chaxby -T$Bg_min/$Bg_max/$Bg_int  >Boug.cpt
 gmt4 psbasemap -B2f1/2f1:."":nSeW -J$proy -R$lon_min/$lon_max/$lat_min/$lat_max -K -O -X-11 -Y-9  >>delta.ps
-gmt4 psscale -CBoug.cpt -D8/4/8.5/0.9 -K -O -B::/:"Boug(mGal)": >>delta.ps
+gmt4 psscale -CBoug.cpt -D8/4/8.5/0.9 -K -O -B$Bg_int::/:"Boug(mGal)": >>delta.ps
 gmt4 grdimage Boug.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$proy -CBoug.cpt -O -K -E150 >>delta.ps
 
 if [ $syn -eq 0 ]
@@ -687,10 +688,10 @@ fi
 #gmt4 minmax -C OUT_xyz/Trhopvels.xyz | awk '{print $5}' | read z_bot
 #awk '{if ($3==-396500.000) print $1*1e-3,"'$L_y'"-$2*1e-3,$6*1e6-1.3314926e10}' OUT_xyz/Trhopvels.xyz  > P_400_c.xyz
 echo -N$N_x/$N_y -D0/$L_x_m/0/$L_y_m -T$Te
-./tisc -QOUT_xyz/P_400_c.xyz -V3 -N$N_x/$N_y -D0/$L_x_m/0/$L_y_m -qmode_interp=0 -T$Te > flex_load_c.xyw
+tisc -QOUT_xyz/P_400_c.xyz -V3 -N$N_x/$N_y -D0/$L_x_m/0/$L_y_m -qmode_interp=0 -T$Te > flex_load_c.xyw
 awk '{if (NR>9) print $1,$2,$3}' flex_load_c.xyw |
 gmt4 xyz2grd -Gflex_load_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
-gmt4 grdproject flex_load_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -Gflex_load.grd
+gmt4 grdproject flex_load_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -Gflex_load.grd
 gmt4 grd2xyz flex_load.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+ -Gflex_load.grd -T.25
 gmt4 grd2xyz flex_load.grd >flex_load.xyz
 gmt4 minmax flex_load.xyz
@@ -698,7 +699,7 @@ gmt4 minmax flex_load.xyz
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/elev_calc_c.xyz |
 gmt4 xyz2grd -Gelev_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject elev_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -Gelev_calc.grd
+gmt4 grdproject elev_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -Gelev_calc.grd
 gmt4 grd2xyz elev_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -Gelev_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz elev_calc.grd >$dir_data/elev_calc.xyz
 
@@ -722,7 +723,7 @@ fi
 #grd2cpt elevation.grd -Chaxby -S$el_min/$el_max/$el_int  >elev.cpt
 gmt4 makecpt -Chaxby -T$el_min/$el_max/$el_int >elev.cpt
 gmt4 psbasemap -B2f1::/2f1:Elevation:nSEw -J$proy -R$lon_min/$lon_max/$lat_min/$lat_max -K -O -X11 >>delta.ps
-gmt4 psscale -Celev.cpt -D8.5/4/8.5/0.9  -K -O -B::/:"Elev(m)": >>delta.ps
+gmt4 psscale -Celev.cpt -D8.5/4/8.5/0.9  -K -O -B$el_int::/:"Elev(m)": >>delta.ps
 gmt4 grdimage elevation.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$proy -Celev.cpt -O -K -E150 >>delta.ps
 
 if [ $syn -eq 0 ]
@@ -738,7 +739,7 @@ then
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3*1e3}' OUT_xyz/HF.xyz |
 gmt4 surface  -GHF_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject HF_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GHF.grd
+gmt4 grdproject HF_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -GHF.grd
 
 gmt4 grd2xyz HF.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GHF.grd -I"$N_x"+/"$N_y"+ -T.25
 
@@ -746,7 +747,7 @@ gmt4 grd2xyz HF.grd >$dir_data/HF.xyz
 gmt4 makecpt -Chaxby -T$HF_min/$HF_max/$HF_int  >HF.cpt
 #grd2cpt HF.grd -V -Chaxby -S$HF_min/$HF_max/$HF_int  >HF.cpt
 gmt4 psbasemap  -B2f1/2f1:."HEAT FLOW": -J$p -R$lon_min/$lon_max/$lat_min/$lat_max -K >HF.ps
-gmt4 psscale -CHF.cpt  -D14/6.9/14.5/0.9  -K -O -B::/:"(HF mWatts)": >>HF.ps
+gmt4 psscale -CHF.cpt  -D14/6.9/14.5/0.9  -K -O -B$HF_int::/:"(HF mWatts)": >>HF.ps
 if [ $syn -eq 0 ]
 then
 gmt4 grdimage  HF.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CHF.cpt -O -K -E150  >>HF.ps
@@ -763,7 +764,7 @@ awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$4}' OUT_xyz/moho.xyz |
 ##awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,($3-11910.3)}' geoide_1D.xyz |
 gmt4 surface  -GT_moho_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject T_moho_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GT_moho.grd
+gmt4 grdproject T_moho_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk   -GT_moho.grd
 gmt4 grd2xyz T_moho.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GT_moho.grd -I"$N_x"+/"$N_y"+ -T.25
 #mv $dir_data/T_moho.xyz ./bak/T_moho.xyz
 gmt4 grd2xyz T_moho.grd >$dir_data/T_moho.xyz
@@ -780,73 +781,73 @@ then
 gmt4 grdimage T_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_moho.cpt -O -K -E150  >>T_moho.ps
 gmt4 pscoast -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -Di -W2p  -K -O -A500 -U >>T_moho.ps
 
-gmt4 grdimage T_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_mid_moho.cpt -O -K -E150  >>T_mid_moho.ps
-gmt4 pscoast -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -Di -W2p  -K -O -A500 -U >>T_mid_moho.ps
+#gmt4 grdimage T_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_mid_moho.cpt -O -K -E150  >>T_mid_moho.ps
+#gmt4 pscoast -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -Di -W2p  -K -O -A500 -U >>T_mid_moho.ps
 
-gmt4 grdimage P_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CP_mid_moho.cpt -O -K -E150  >>P_mid_moho.ps
-gmt4 pscoast -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -Di -W2p  -K -O -A500 -U >>P_mid_moho.ps
+#gmt4 grdimage P_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CP_mid_moho.cpt -O -K -E150  >>P_mid_moho.ps
+#gmt4 pscoast -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -Di -W2p  -K -O -A500 -U >>P_mid_moho.ps
 
 else
 gmt4 grdimage T_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_moho.cpt -K -O  >>T_moho.ps
 
-gmt4 grdimage T_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_moho.cpt -K -O  >>T_mid_moho.ps
+#gmt4 grdimage T_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CT_moho.cpt -K -O  >>T_mid_moho.ps
 
-gmt4 grdimage P_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CP_moho.cpt -K -O  >>P_mid_moho.ps
+#gmt4 grdimage P_mid_moho.grd -R$lon_min/$lon_max/$lat_min/$lat_max -J$p -CP_moho.cpt -K -O  >>P_mid_moho.ps
 
 
 
 fi
 
-gmt4 grdcontour T_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CT_moho.cpt >> T_moho.ps
-gmt4 psscale -CT_moho.cpt -D23/7.9/15/0.9   -O -B::/:"(T_moho �C)": >>T_moho.ps
+#gmt4 grdcontour T_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CT_moho.cpt >> T_moho.ps
+gmt4 psscale -CT_moho.cpt -D23/7.9/15/0.9   -O -B10::/:"(T_moho �C)": >>T_moho.ps
 
-gmt4 grdcontour T_mid_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CT_mid_moho.cpt >> T_mid_moho.ps
-gmt4 psscale -CT_mid_moho.cpt -D23/7.9/15/0.9   -O -B::/:"(T_mid_moho �C)": >>T_mid_moho.ps
+#gmt4 grdcontour T_mid_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CT_mid_moho.cpt >> T_mid_moho.ps
+#gmt4 psscale -CT_mid_moho.cpt -D23/7.9/15/0.9   -O -B::/:"(T_mid_moho �C)": >>T_mid_moho.ps
 
-gmt4 grdcontour P_mid_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CP_mid_moho.cpt >> P_mid_moho.ps
-gmt4 psscale -CP_mid_moho.cpt -D23/7.9/15/0.9   -O -B::/:"(P_mid_moho GPa)": >>P_mid_moho.ps
+#gmt4 grdcontour P_mid_moho.grd -R -J -K -O -W2/0/0/0 -Af10a0 -CP_mid_moho.cpt >> P_mid_moho.ps
+#gmt4 psscale -CP_mid_moho.cpt -D23/7.9/15/0.9   -O -B::/:"(P_mid_moho GPa)": >>P_mid_moho.ps
 
 #Gravity gradients (both residuals and calculated are refered to MRF rather than LNOF)
 #Uzz
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$3}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUzz_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uzz_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUzz_calc.grd
+gmt4 grdproject Uzz_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUzz_calc.grd
 gmt4 grd2xyz Uzz_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUzz_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uzz_calc.grd >$dir_data/Uzz_calc.xyz
 #Uxx
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$4}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUxx_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uxx_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUxx_calc.grd
+gmt4 grdproject Uxx_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUxx_calc.grd
 gmt4 grd2xyz Uxx_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUxx_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uxx_calc.grd >$dir_data/Uxx_calc.xyz
 #Uyy
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$5}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUyy_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uyy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUyy_calc.grd
+gmt4 grdproject Uyy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUyy_calc.grd
 gmt4 grd2xyz Uyy_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUyy_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uyy_calc.grd >$dir_data/Uyy_calc.xyz
 #Uzx
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$6}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUzx_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uzx_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUzx_calc.grd
+gmt4 grdproject Uzx_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUzx_calc.grd
 gmt4 grd2xyz Uzx_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUzx_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uzx_calc.grd >$dir_data/Uzx_calc.xyz
 #Uzy
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$7}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUzy_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uzy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUzy_calc.grd
+gmt4 grdproject Uzy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUzy_calc.grd
 gmt4 grd2xyz Uzy_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUzy_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uzy_calc.grd >$dir_data/Uzy_calc.xyz
 #Uxy
 awk '{print $1*1e-3,"'$L_y'"-$2*1e-3,$8}' OUT_xyz/U_sec_deriv_calc_c.xyz |
 gmt4 xyz2grd -GUxy_calc_c.grd  -R0/$L_x/0/$L_y -I"$N_x"+/"$N_y"+
 #desproyectar
-gmt4 grdproject Uxy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -N$N_x/$N_y -Ak -GUxy_calc.grd
+gmt4 grdproject Uxy_calc_c.grd  -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk -GUxy_calc.grd
 gmt4 grd2xyz Uxy_calc.grd | gmt4 surface  -R$lon_min/$lon_max/$lat_min/$lat_max -GUxy_calc.grd -I"$N_x"+/"$N_y"+ -T.25
 gmt4 grd2xyz Uxy_calc.grd >$dir_data/Uxy_calc.xyz
 

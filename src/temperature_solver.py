@@ -106,11 +106,9 @@ with open('LITMOD3D.info', 'r') as litmod_parameters:
     line = litmod_parameters.readline()
     line = line.replace('D', '.')
     linesplit = line.split()
-    print(line)
     
-    
-    T0 = float(linesplit[9])  + 273.14
-    T1 = float(linesplit[10]) + 273.14
+    T0 = np.float(linesplit[9])  + 273.14
+    T1 = np.float(linesplit[10]) + 273.14
     
 # T1 = 1315.0 + 273.14
 # T0 = 273.14
