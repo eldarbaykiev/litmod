@@ -109,10 +109,14 @@ volexp=16
 #in cm3/mol
 d_size=10
 
+#make calculations for the whole grid
+mineos_whole_grid=1
+
 #list of columns for Mineos
 #format: LON [deg] | LAT [deg] | Rayleigh_column_filename | Love_column_filename | Anisotropy [1 or 0] | Anisotropy_filename
 #mineos_lonlat='105 50 BaikalRayl_rsmp BaikalLove_rsmp 1 anis.dat'
 mineos_lonlat=''
+
 
 #+++++++++++MANTLE FILE INFO+++++++++++++++++++++++++++++++++++
 #Format: litho_number name_of_associated file \n
@@ -343,12 +347,10 @@ rm $path_grad/${grad_name}_noheader.xyz
 
 for comp in zz xx yy zx zy xy
 do
-
-        layer=${grad_name}_G${comp}
-        gmt surface $path_grad/${layer}.xyz -Rd$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_x"+ -G$path_grad/qq.grd
+    layer=${grad_name}_G${comp}
+    gmt surface $path_grad/${layer}.xyz -Rd$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_x"+ -G$path_grad/qq.grd
 	gmt grd2xyz $path_grad/qq.grd > $path_grad/comp_${comp}.xyz
 	rm $path_grad/${layer}.xyz
-	
 done
 
 awk '{print $1, $2, $3}' $path_grad/comp_zz.xyz > $path_grad/dmmy_zz
@@ -530,14 +532,10 @@ echo  $L_x $L_y $E_max $N_x $N_y $N_z $d_z $topo $temp_calc $Ts $Ta $rho_red $pl
 
 
 ##############MINEOS##########################
-echo $mineos_lonlat>mineos_lonlat.dat
-N_LIN=$(wc -c mineos_lonlat.dat | awk '{print $1}')
-
-if [ "$N_LIN" -eq 1 ]
+if [ "$mineos_whole_grid" -eq 1 ]
 then
-    echo "No column for MINEOS"
-    echo "0">mineos_lonlat.xy
-else
+    echo "HELLO WROLD"
+
     cd layers
     gmt surface layer1.xyz -Gqqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
     gmt grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Gqqqc.grd
@@ -546,19 +544,60 @@ else
     read L_x
     gmt grdinfo qqqc.grd | grep y_max: | awk '{print $5 }' |
     read L_y
+    
+    gmt grd2xyz qqqc.grd > ../qqqc.xyv
     rm qqq.grd
     rm qqqc.grd
+    
+    
     cd ../
 
-    awk '{print $1,$2}' mineos_lonlat.dat > lonlat.ll
-    gmt mapproject lonlat.ll -R$lon_min/$lon_max/$lat_min/$lat_max -J${proj} -Fk > ll.xy
-    awk '{print $3,$4,$5,$6}' mineos_lonlat.dat > lonlat.other
-    paste ll.xy lonlat.other > ll1.xy
-    wc -l < ll1.xy > mineos_lonlat.xy
-    #wc -l mineos_lonlat.dat > mineos_lonlat.xy
-    awk '{print $1*1e+3,("'$L_y'"-$2)*1e+3,$3,$4,$5,$6}' ll1.xy >> mineos_lonlat.xy
-    rm ll.xy lonlat.other ll1.xy lonlat.ll
+    awk '{print $1,$2}' qqqc.xyv > grid.xy
+    awk '{print $1*1e+3,("'$L_y'"-$2)*1e+3,"dummyrayl_rsmp dummylove_rsmp 1 dummy_anis.dat"}' grid.xy > mineos_grid.xy
+    
+    wc -l < mineos_grid.xy > mineos_lonlat.xy
+    cat mineos_grid.xy >> mineos_lonlat.xy
+    
+else
+
+    echo $mineos_lonlat>mineos_lonlat.dat
+    N_LIN=$(wc -c mineos_lonlat.dat | awk '{print $1}')
+
+
+
+    if [ "$N_LIN" -eq 1 ]
+    then
+        echo "No column for MINEOS"
+        echo "0">mineos_lonlat.xy
+    else
+        cd layers
+        gmt surface layer1.xyz -Gqqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -I"$N_x"+/"$N_y"+
+        gmt grdproject qqq.grd  -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj  -Fk  -Gqqqc.grd
+        #Read dimension of the cartesian grid
+        gmt grdinfo qqqc.grd | grep x_max: | awk '{print $5 }' |
+        read L_x
+        gmt grdinfo qqqc.grd | grep y_max: | awk '{print $5 }' |
+        read L_y
+        rm qqq.grd
+        rm qqqc.grd
+        cd ../
+
+        awk '{print $1,$2}' mineos_lonlat.dat > lonlat.ll
+        gmt mapproject lonlat.ll -R$lon_min/$lon_max/$lat_min/$lat_max -J${proj} -Fk > ll.xy
+        awk '{print $3,$4,$5,$6}' mineos_lonlat.dat > lonlat.other
+        paste ll.xy lonlat.other > ll1.xy
+        wc -l < ll1.xy > mineos_lonlat.xy
+        #wc -l mineos_lonlat.dat > mineos_lonlat.xy
+        awk '{print $1*1e+3,("'$L_y'"-$2)*1e+3,$3,$4,$5,$6}' ll1.xy >> mineos_lonlat.xy
+        rm ll.xy lonlat.other ll1.xy lonlat.ll
+    fi
+
 fi
+
+
+
+
+    
 
 
 
