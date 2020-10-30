@@ -524,7 +524,7 @@
         write(*,*) 'NEAREST POINT ON THE GRID FOUND:',
      *          d_Ix, d_Iy, d_x*(d_Ix-1), d_y*(d_Iy-1)
 
-        write (indexstring, "(I3.3)") d_coordind
+        write (indexstring, "(I6.6)") d_coordind
         write(*,*) indexstring
 
 	      call read_DAT

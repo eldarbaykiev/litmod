@@ -441,7 +441,7 @@
       MODULE M_surf_waves
        INTEGER(4) N_ray,N_love,I_anis
        CHARACTER(300)name_ray,name_love,name_anis
-       CHARACTER(3)indexstring
+       CHARACTER(6)indexstring
        REAL(8),ALLOCATABLE::v_ray_dat(:,:),v_ray_calc(:),
      *                      v_love_dat(:,:),v_love_calc(:),srf_wv(:,:)
        REAL(8),ALLOCATABLE::v_ray_calc_best(:),v_love_calc_best(:)

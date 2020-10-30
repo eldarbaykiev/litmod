@@ -545,7 +545,10 @@ then
     gmt grdinfo qqqc.grd | grep y_max: | awk '{print $5 }' |
     read L_y
     
+    gmt grdproject qqqc.grd -I -R$lon_min/$lon_max/$lat_min/$lat_max -J$proj -Fk   -GRET.grd
+    
     gmt grd2xyz qqqc.grd > ../qqqc.xyv
+    gmt grd2xyz RET.grd > ../RET.lonlat
     rm qqq.grd
     rm qqqc.grd
     
