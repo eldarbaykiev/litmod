@@ -51,24 +51,14 @@ Note that if you already had **pgplot** and/or **XQuartz** installed on your Mac
 ## Usage
 
 ### Preparing GMT4
-LitMod executables and main calling script `LITMOD_3D.job` use [GMT4](http://gmt.soest.hawaii.edu), and therefore **GMT4** must be set up to be called directly from the the local LitMod folder, such as:
-```
-minmax -C ./layers/layer1.xyz
-```
+LitMod executables and main calling script `LITMOD_3D_4.0.job` use [GMT6](http://gmt.soest.hawaii.edu). **GMT6** should bei nstalled prior the usage of **LitMod**.
 
-To install **GMT4** on **macOS**, get [MacPorts](https://www.macports.org/).
-
-Than run:
+Check the version of **GMT** by running:
 ```
-sudo port install gmt4
+gmt
 ```
 
-In **Linux**, follow instructions on http://gmt.soest.hawaii.edu to install **GMT4**.
-
-
-**IN PROGRESS**
-
-
+in the console (for both Mac and Linux).
 
 
 ### Input files
@@ -85,19 +75,44 @@ In addition other input files are required:
 - Geometry of model layers in the folder 'layers' (geographical coordinates),and the folder 'layers_xy' (Cartesian coordinates).
 - Compositional files in the folder 'mant_data'.
 
-### LITMOD_3D.job
-`LITMOD_3D.job`  contains all the input values required to run LiMod. The script interfaces with [GMT](https://github.com/GenericMappingTools) and generates `LITMOD3D.info` and `mnt.info` files rquired by LitMod. `LITMOD_3D.job`  also processes the files contained in the folder 'layers' (geographical layers) and puts the output (Cartesian layers) in the folder 'layers_xy' as required by LitMod. 
+### LITMOD_3D_4.0.job
+`LITMOD_3D_4.0.job`  contains all the input values required to run LiMod. The script interfaces with [GMT](https://github.com/GenericMappingTools) and generates `LITMOD3D.info` and `mnt.info` files rquired by LitMod. `LITMOD_3D_4.0.job`  also processes the files contained in the folder 'layers' (geographical layers) and puts the output (Cartesian layers) in the folder 'layers_xy' as required by LitMod. 
 
-At the beginning of `LITMOD_3D.job` the user can set up the geopgraphical boundaries of the modelling region (lon_min, lon_max, lat_min, lat_max), the number of nodes in the model (N_x, N_y, N_z) and other parameters. 
+At the beginning of `LITMOD_3D_4.0.job` the user can set up the geopgraphical boundaries of the modelling region (lon_min, lon_max, lat_min, lat_max), the number of nodes in the model (N_x, N_y, N_z) and other parameters. 
 
-`LITMOD_3D.job` preprocesses input grids for geophysical data (e.g., gravity anomaly, surface topography, etc.) and reprojects them onto the modelling region (within lon_min, lon_max, lat_min, lat_max) with defined grid spacing (as per N_x, N_y variables). To make a first run, set parameter pre_pro to 1 and run `LITMOD_3D.job`:
+`LITMOD_3D_4.0.job` preprocesses input grids for geophysical data (e.g., gravity anomaly, surface topography, etc.) and reprojects them onto the modelling region (within lon_min, lon_max, lat_min, lat_max) with defined grid spacing (as per N_x, N_y variables). To make a first run, set parameter pre_pro to 1 and run `LITMOD_3D_4.0.job`:
 ```
-./LITMOD_3D.job
+./LITMOD_3D_4.0.job
 ```
-The distibution provides sample observed data grids in the folder `example_obs`. The user can provide customized data grids with the format lon; lat; value that will be preprocessed by `LITMOD_3D.job`. For the gravity gradients a small program (LNOF2MRF) is provided to rotate the tensor from the Local North Oriented Reference Frame (https://earth.esa.int/web/guest/data-access/view-data-product/-/article/goce-gravity-gradients-in-lnof-5775) to the model reference frame in the Cartesian coordinate system used by LitMod. 
+The distibution provides sample observed data grids in the folder `example_obs`. The user can provide customized data grids with the format lon; lat; value that will be preprocessed by `LITMOD_3D_4.0.job`. For the gravity gradients a small program (LNOF2MRF) is provided to rotate the tensor from the Local North Oriented Reference Frame (https://earth.esa.int/web/guest/data-access/view-data-product/-/article/goce-gravity-gradients-in-lnof-5775) to the model reference frame in the Cartesian coordinate system used by LitMod. 
 
 
-After running `LITMOD_3D.job` in preprocessing mode, switch pre_pro variable to 0 and run `LITMOD_3D.job` again. This will run **LitMod** forward modelling code. The ouput geophysical data sets and the 3D lithospheric model can be visualized using **LitMod** graphical interface, which also can be used to interactively modify the 3D model:
+After running `LITMOD_3D_4.0.job` in preprocessing mode, switch pre_pro variable to 0 and run `LITMOD_3D_4.0.job` again. This will run **LitMod** forward modelling code. The ouput geophysical data sets and the 3D lithospheric model can be visualized using **LitMod** graphical interface, which also can be used to interactively modify the 3D model:
 ```
 ./litmod_intf
 ```
+
+
+### MINEOS grid calculation
+
+To calculate dispersion curves in each grid point, open `LITMOD_3D_4.0.job` and set 
+```
+mineos_whole_grid=1
+```
+This would turn on the caluclation of dispersion curves in each node of the model (N_x, N_y). 
+
+You are required to have `ME01.dat` and `ME01b.dat` files with reference reference 1D models with Vp, Vs, rho for z > 400 km for isotropic and anisotropic cases in the folder.
+
+After running `LITMOD_3D_4.0.job`, run
+
+```
+python3 periods.py 10.0
+```
+
+to create  grids with veolcities and velocity anomalies for 10.0 second period. For other period, enter another number as an argument instead of 10.0. 
+
+Four grids in format LON LAT VALUE would be produced as a result:
+`MINEOS_out_grid_love_10.0.xyz`,  `MINEOS_out_grid_ray_10.0.xyz`, `MINEOS_out_grid_love_10.0_anom.xyz`, `MINEOS_out_grid_ray_10.0_anom.xyz`
+
+Grids can be plotted using GMT script   `plot_MINEOS_out_grid.sh`
+
