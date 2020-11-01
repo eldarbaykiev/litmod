@@ -50,8 +50,8 @@ Note that if you already had **pgplot** and/or **XQuartz** installed on your Mac
 
 ## Usage
 
-### Preparing GMT4
-LitMod executables and main calling script `LITMOD_3D_4.0.job` use [GMT6](http://gmt.soest.hawaii.edu). **GMT6** should bei nstalled prior the usage of **LitMod**.
+### Preparing GMT6
+LitMod executables and main calling script `LITMOD_3D_4.0.job` use [GMT6](http://gmt.soest.hawaii.edu). **GMT6** should be installed prior the usage of **LitMod**.
 
 Check the version of **GMT** by running:
 ```
