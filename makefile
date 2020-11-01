@@ -28,6 +28,8 @@ litmod:
 	$(CC) -o gravcalc_parallel src/modules.for src/gravcalc_parallel.for src/SUB_Geo_Grad3D.for src/SUB_GeoGrav_Grad3D.for src/SUB_Grav_Grad3D.for src/SUB_SumTan.for src/SUB_U_SECOND_DER.for
 	cp src/gravity_calculator.py gravity_calculator.py
 	
+	cp src/periods.py periods.py
+	
 litmod2:
 	$(CC) -o litmod2 LITMOD3D_FOR_STATOIL_last/LITMOD3D.for LITMOD3D_FOR_STATOIL_last/SUB* $(CFLAGS)
 
@@ -36,4 +38,4 @@ litmod_intf:
 	cp src_intf/minmax.py minmax.py
 
 clean:
-	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py gravity_calculator.py litmod_intf minmax.py litmod2
+	rm litmod gravcalc_parallel conductionNd_serial.py temperature_solver.py periods.py gravity_calculator.py litmod_intf minmax.py litmod2
