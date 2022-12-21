@@ -1,6 +1,6 @@
 CC=
 CFLAGS=-Ofast -fno-automatic -fd-lines-as-code -ffixed-line-length-none -std=legacy
-CFLAGS_INTF=
+CFLAGS_INTF=-std=legacy
 
 UNAME := $(shell uname)
 
@@ -16,7 +16,7 @@ ifeq ($(UNAME), Darwin)
   CFLAGS_INTF += -lpgplot -L/opt/X11/lib -I/opt/X11/include -lX11 -L/usr/local/opt/pgplot/lib -I/usr/local/opt/pgplot/include  -fd-lines-as-comments -lpng 
 endif
 
-all: litmod litmod_intf litmod2
+all: litmod gravcalc_parallel litmod_intf litmod2
 
 interface: litmod_intf
 
@@ -25,7 +25,8 @@ litmod:
 	cp src/conductionNd_serial.py conductionNd_serial.py
 	cp src/temperature_solver.py temperature_solver.py
 
-	$(CC) -o gravcalc_parallel src/modules.for src/gravcalc_parallel.for src/SUB_Geo_Grad3D.for src/SUB_GeoGrav_Grad3D.for src/SUB_Grav_Grad3D.for src/SUB_SumTan.for src/SUB_U_SECOND_DER.for
+gravcalc_parallel:
+	$(CC) -o gravcalc_parallel src/modules.for src/gravcalc_parallel.for src/SUB_Geo_Grad3D.for src/SUB_GeoGrav_Grad3D.for src/SUB_Grav_Grad3D.for src/SUB_SumTan.for src/SUB_U_SECOND_DER.for $(CFLAGS)
 	cp src/gravity_calculator.py gravity_calculator.py
 	
 	cp src/periods.py periods.py
